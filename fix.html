@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Connection - VzPBug</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .fix-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .fix-item {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .success { border-color: #28a745; }
+        .error { border-color: #dc3545; }
+        .warning { border-color: #ffc107; }
+        .info { border-color: #17a2b8; }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="fix-container">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-wrench"></i> Fix Connection Issues
+        </h1>
+        
+        <div id="fixResults"></div>
+        
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="runFix()" id="fixBtn">
+                <i class="fas fa-play"></i> Run Auto Fix
+            </button>
+            <a href="debug.html" class="btn btn-info ms-2">
+                <i class="fas fa-bug"></i> Debug Connection
+            </a>
+            <a href="index.html" class="btn btn-secondary ms-2">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function runFix() {
+            const results = document.getElementById('fixResults');
+            const fixBtn = document.getElementById('fixBtn');
+            
+            results.innerHTML = '<div class="fix-item warning"><i class="fas fa-spinner fa-spin"></i> Running auto fix...</div>';
+            fixBtn.disabled = true;
+            fixBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fixing...';
+            
+            try {
+                const response = await fetch('fix_connection.php');
+                const data = await response.json();
+                
+                let html = '';
+                
+                if (data.success) {
+                    html += `
+                        <div class="fix-item success">
+                            <h5><i class="fas fa-check-circle"></i> Auto Fix Completed</h5>
+                            <p><strong>PHP Version:</strong> ${data.php_version}</p>
+                            <p><strong>Server:</strong> ${data.server_software}</p>
+                            <p><strong>Timestamp:</strong> ${data.timestamp}</p>
+                        </div>
+                    `;
+                    
+                    if (data.result.fixes.length > 0) {
+                        html += `
+                            <div class="fix-item info">
+                                <h5><i class="fas fa-tools"></i> Issues Fixed</h5>
+                                <ul>
+                                    ${data.result.fixes.map(fix => `<li>${fix}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    if (data.result.issues.length > 0) {
+                        html += `
+                            <div class="fix-item error">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Remaining Issues</h5>
+                                <ul>
+                                    ${data.result.issues.map(issue => `<li>${issue}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    if (data.result.issues.length === 0 && data.result.fixes.length === 0) {
+                        html += `
+                            <div class="fix-item success">
+                                <h5><i class="fas fa-thumbs-up"></i> No Issues Found</h5>
+                                <p>Semua sistem berjalan dengan baik!</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    html += `
+                        <div class="fix-item error">
+                            <h5><i class="fas fa-times-circle"></i> Fix Failed</h5>
+                            <p>Gagal menjalankan auto fix. Silakan coba lagi.</p>
+                        </div>
+                    `;
+                }
+                
+                results.innerHTML = html;
+                
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="fix-item error">
+                        <h5><i class="fas fa-times-circle"></i> Connection Error</h5>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p>Pastikan server PHP berjalan dengan benar.</p>
+                    </div>
+                `;
+            } finally {
+                fixBtn.disabled = false;
+                fixBtn.innerHTML = '<i class="fas fa-play"></i> Run Auto Fix';
+            }
+        }
+        
+        // Auto run fix on page load
+        document.addEventListener('DOMContentLoaded', runFix);
+    </script>
+</body>
+</html>
