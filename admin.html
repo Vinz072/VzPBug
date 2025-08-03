@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VzPBug v1.0 - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="assets/bgvid.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                <img src="assets/logo.png" alt="Logo" width="40" height="40" class="me-2 rounded-circle">
+                VzPBug v1.0 - Admin
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-home me-1"></i>Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">
+                            <i class="fas fa-user me-1"></i>Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.html">
+                            <i class="fas fa-cog me-1"></i>Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>Keluar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container-fluid" style="margin-top: 100px;">
+        <!-- Admin Stats -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <span class="stat-number" id="totalUsers">0</span>
+                <span class="stat-label">Total User</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="activeUsers">0</span>
+                <span class="stat-label">User Aktif</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="totalAttempts">0</span>
+                <span class="stat-label">Total Percobaan</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="createdToday">0</span>
+                <span class="stat-label">Dibuat Hari Ini</span>
+            </div>
+            <div class="stat-card" id="ownerOnlyStats" style="display: none;">
+                <span class="stat-number" id="adminCreated">0</span>
+                <span class="stat-label">Akun oleh Admin</span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Create User Section -->
+            <div class="col-lg-4">
+                <div class="dashboard-card">
+                    <h5 class="mb-4"><i class="fas fa-user-plus me-2"></i>Buat Akun Baru</h5>
+                    
+                    <form id="createUserForm">
+                        <div class="mb-3">
+                            <label for="newUsername" class="form-label">Nama Pengguna</label>
+                            <input type="text" class="form-control" id="newUsername" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Kata Sandi</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="newRole" class="form-label">Role</label>
+                            <select class="form-select" id="newRole" required>
+                                <option value="">-- Pilih Role --</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="duration" class="form-label">Durasi Aktif (Hari)</label>
+                            <input type="number" class="form-control" id="duration" min="1" max="365" value="30" required>
+                            
+                            <div class="duration-buttons">
+                                <span class="duration-btn" onclick="setDuration(1)">1 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(3)">3 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(7)">7 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(15)">15 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(30)">30 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(60)">60 Hari</span>
+                                <span class="duration-btn" onclick="setDuration(90)">90 Hari</span>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-custom w-100">
+                            <i class="fas fa-plus me-2"></i>Buat Akun
+                        </button>
+                        
+                        <div class="mt-2 text-center">
+                            <small class="text-muted">Limit: <span id="dailyLimit">10</span> akun per hari</small>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Server Control (Owner Only) -->
+                <div class="dashboard-card" id="serverControl" style="display: none;">
+                    <h5 class="mb-4"><i class="fas fa-server me-2"></i>Kontrol Server</h5>
+                    
+                    <div class="mb-3">
+                        <label for="serverStatus" class="form-label">Status Server</label>
+                        <select class="form-select" id="serverStatusSelect">
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                            <option value="maintenance">Perbaikan</option>
+                            <option value="error">Error Tidak Diketahui</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-warning w-100" onclick="updateServerStatus()">
+                        <i class="fas fa-sync me-2"></i>Update Status
+                    </button>
+                </div>
+            </div>
+            
+            <!-- User Management -->
+            <div class="col-lg-8">
+                <div class="dashboard-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5><i class="fas fa-users me-2"></i>Manajemen User</h5>
+                        <button class="btn btn-outline-light btn-sm" onclick="refreshUsers()">
+                            <i class="fas fa-sync me-1"></i>Refresh
+                        </button>
+                    </div>
+                    
+                    <!-- Search and Filter -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="searchUser" placeholder="Cari user...">
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterRole">
+                                <option value="">Semua Role</option>
+                                <option value="pengguna">Pengguna</option>
+                                <option value="reseller">Reseller</option>
+                                <option value="admin">Admin</option>
+                                <option value="OWNER">Owner</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="filterStatus">
+                                <option value="">Semua Status</option>
+                                <option value="active">Aktif</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Users Table -->
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Bug Attempts</th>
+                                    <th>Status</th>
+                                    <th>Expired</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <div class="loading"></div>
+                                        <span class="ms-2">Memuat data...</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Information Management (Owner Only) -->
+        <div class="row mt-4" id="infoManagement" style="display: none;">
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Manajemen Informasi</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form id="addInfoForm">
+                                <div class="mb-3">
+                                    <label for="infoMessage" class="form-label">Pesan Informasi</label>
+                                    <textarea class="form-control" id="infoMessage" rows="4" placeholder="Masukkan informasi untuk ditampilkan..." required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-custom">
+                                    <i class="fas fa-plus me-2"></i>Tambah Informasi
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6>Informasi Terbaru (Max 20)</h6>
+                            <div id="infoList" style="max-height: 300px; overflow-y: auto;">
+                                <div class="text-center">
+                                    <div class="loading"></div>
+                                    <p class="mt-2">Memuat informasi...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Detail Modal -->
+    <div class="modal fade" id="userDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content custom-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail User</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="userDetailContent">
+                    <!-- User details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Extend User Modal -->
+    <div class="modal fade" id="extendUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content custom-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title">Perpanjang Akun</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Perpanjang akun: <strong id="extendUsername"></strong></p>
+                    
+                    <div class="mb-3">
+                        <label for="extendDuration" class="form-label">Tambah Durasi (Hari)</label>
+                        <input type="number" class="form-control" id="extendDuration" min="1" max="365" value="30">
+                        
+                        <div class="duration-buttons">
+                            <span class="duration-btn" onclick="setExtendDuration(1)">1 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(3)">3 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(7)">7 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(15)">15 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(30)">30 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(60)">60 Hari</span>
+                            <span class="duration-btn" onclick="setExtendDuration(90)">90 Hari</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-custom" onclick="extendUser()">Perpanjang</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VzPBug v1.0 - Profil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="assets/bgvid.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <div class="overlay"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
+                <img src="assets/logo.png" alt="Logo" width="40" height="40" class="me-2 rounded-circle">
+                VzPBug v1.0
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">
+                            <i class="fas fa-home me-1"></i>Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html">
+                            <i class="fas fa-user me-1"></i>Profil
+                        </a>
+                    </li>
+                    <li class="nav-item" id="adminNavItem" style="display: none;">
+                        <a class="nav-link" href="admin.html">
+                            <i class="fas fa-cog me-1"></i>Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-1"></i>Keluar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 100px;">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Terminal Container -->
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fas fa-terminal me-2"></i>
+                            VzPBug Terminal v1.0
+                        </div>
+                        <div class="terminal-dots">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="terminal-content" id="terminalContent">
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">system_info</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #ffaa00;">╔══════════════════════════════════════════════════════════════╗</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #ffaa00;">║</span>
+                            <span style="color: #ff4444; font-weight: bold;"> VzPBug User Information System </span>
+                            <span style="color: #ffaa00;">                      ║</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #ffaa00;">╚══════════════════════════════════════════════════════════════╝</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">┌─ User Profile</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Username:</span> <span id="profileUsername" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Role:</span> <span id="profileRole" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Account Status:</span> <span id="profileStatus" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">└─ Created:</span> <span id="profileCreated" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">┌─ Activity Statistics</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Bug Attempts:</span> <span id="profileBugAttempts" style="color: #ff4444;">0</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Last Login:</span> <span id="profileLastLogin" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">└─ Session Time:</span> <span id="sessionTime" style="color: #00ff00;">00:00:00</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">┌─ Account Expiration</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Expired Date:</span> <span id="profileExpired" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">└─ Days Remaining:</span> <span id="daysRemaining" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">┌─ Server Information</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ Server Status:</span> <span id="serverStatusTerminal" style="color: #ffffff;">Loading...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">├─ API Status:</span> <span style="color: #00ff00;">ONLINE</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ffff;">└─ Connection:</span> <span style="color: #00ff00;">SECURE</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span class="terminal-prompt">help</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #ffffff;">Available commands:</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ff00;">  refresh</span> <span style="color: #ffffff;">- Refresh user data</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ff00;">  logout</span> <span style="color: #ffffff;">- Logout from system</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ff00;">  clear</span> <span style="color: #ffffff;">- Clear terminal</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span style="color: #00ff00;">  dashboard</span> <span style="color: #ffffff;">- Go to dashboard</span>
+                        </div>
+                        <div class="terminal-line">&nbsp;</div>
+                        
+                        <div class="terminal-line">
+                            <span class="terminal-prompt" id="commandPrompt">_</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terminal Commands -->
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-success btn-sm w-100" onclick="executeCommand('refresh')">
+                                <i class="fas fa-sync me-1"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-info btn-sm w-100" onclick="executeCommand('dashboard')">
+                                <i class="fas fa-home me-1"></i>Dashboard
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-warning btn-sm w-100" onclick="executeCommand('clear')">
+                                <i class="fas fa-eraser me-1"></i>Clear
+                            </button>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button class="btn btn-outline-danger btn-sm w-100" onclick="executeCommand('logout')">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>
