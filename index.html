@@ -11,8 +11,9 @@
 </head>
 <body>
     <div class="video-background">
-        <video autoplay muted loop>
-            <source src="assets/bgvid.mp4" type="video/mp4">
+        <video autoplay muted loop onerror="this.style.display='none'">
+            <source src="assets/bgvid.mp4" type="video/mp4" onerror="this.parentElement.style.display='none'">
+            <!-- Fallback for missing video -->
         </video>
     </div>
     
@@ -22,7 +23,7 @@
         <div class="login-container">
             <div class="login-card">
                 <div class="text-center mb-4">
-                    <img src="assets/logo.png" alt="VzPBug Logo" class="logo-img">
+                    <img src="assets/logo.png" alt="VzPBug Logo" class="logo-img" onerror="this.style.display='none'">
                     <h2 class="app-title">VzPBug v1.0</h2>
                     <p class="app-subtitle">Website Tool Sender</p>
                 </div>

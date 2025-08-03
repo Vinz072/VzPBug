@@ -11,8 +11,9 @@
 </head>
 <body>
     <div class="video-background">
-        <video autoplay muted loop>
-            <source src="assets/bgvid.mp4" type="video/mp4">
+        <video autoplay muted loop onerror="this.style.display='none'">
+            <source src="assets/bgvid.mp4" type="video/mp4" onerror="this.parentElement.style.display='none'">
+            <!-- Fallback for missing video -->
         </video>
     </div>
     
@@ -22,7 +23,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="assets/logo.png" alt="Logo" width="40" height="40" class="me-2 rounded-circle">
+                <img src="assets/logo.png" alt="Logo" width="40" height="40" class="me-2 rounded-circle" onerror="this.style.display='none'">
                 VzPBug v1.0
             </a>
             
@@ -63,7 +64,7 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="dashboard-card text-center">
-                    <img src="assets/logo.png" alt="Logo" class="logo-img mb-3">
+                    <img src="assets/logo.png" alt="Logo" class="logo-img mb-3" onerror="this.style.display='none'">
                     <h2 class="welcome-text mb-2">HALO <span id="userName"></span>!</h2>
                     <p class="text-muted">Selamat datang di VzPBug v1.0 - Tool Sender Telegram</p>
                 </div>
