@@ -495,3 +495,19 @@ body {
     60% { transform: translate(2px, 2px); }
     80% { transform: translate(2px, -2px); }
 }
+
+/* Fallback for missing images */
+img[src*="logo.png"] {
+    background: linear-gradient(45deg, #8b0000, #ff4444);
+    border-radius: 50%;
+}
+
+img[src*="logo.png"]:before {
+    content: "VZ";
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

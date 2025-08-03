@@ -16,7 +16,8 @@ Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header set Access-Control-Allow-Headers "Content-Type, Authorization"
 </FilesMatch>
 
-# Prevent access to sensitive files
+# Prevent direct web access to sensitive files (but allow server-side access)
+# Note: PHP scripts can still read these files server-side
 <Files "*.json">
     Order Allow,Deny
     Deny from all

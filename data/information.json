@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "Selamat Datang di VzPBug v1.0",
+        "message": "Website tool sender Telegram telah aktif dan siap digunakan!",
+        "created_at": "2024-01-01 00:00:00",
+        "created_by": "system"
+    },
+    {
+        "id": 2,
+        "title": "Fitur Baru",
+        "message": "Tersedia template pesan /pesan1, /pesan2, dan /pesan_rahasia untuk kemudahan penggunaan.",
+        "created_at": "2024-01-01 00:00:00",
+        "created_by": "system"
+    }
+]
