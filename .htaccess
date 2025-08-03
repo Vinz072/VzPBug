@@ -40,13 +40,19 @@ Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Deny from all
 </Directory>
 
-# Allow API access
+# Allow PHP files in API directory to be executed
 <Directory "api">
     Options -Indexes
     AllowOverride None
     Order Allow,Deny
     Allow from all
+    <FilesMatch "\.php$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
 </Directory>
+
+
 
 # Custom Error Pages
 ErrorDocument 403 /index.html
@@ -79,5 +85,5 @@ ErrorDocument 404 /index.html
 
 # Prevent hotlinking
 RewriteCond %{HTTP_REFERER} !^$
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yourdomain.com [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
 RewriteRule \.(jpg|jpeg|png|gif|mp4)$ - [NC,F,L]
