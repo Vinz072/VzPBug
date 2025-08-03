@@ -135,7 +135,15 @@ async function sendTelegramMessage() {
         
     } catch (error) {
         console.error('Send message error:', error);
-        showResult('error', 'Terjadi kesalahan koneksi. Silakan coba lagi.');
+        let errorMessage = 'Terjadi kesalahan koneksi. Silakan coba lagi.';
+        
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            errorMessage = 'Tidak dapat terhubung ke server. Periksa koneksi internet Anda.';
+        } else if (error.message.includes('Failed to fetch')) {
+            errorMessage = 'Server tidak merespons. Coba lagi dalam beberapa saat.';
+        }
+        
+        showResult('error', errorMessage);
     } finally {
         sendBtn.innerHTML = originalText;
         sendBtn.disabled = false;
@@ -182,6 +190,9 @@ async function loadServerStatus() {
         const statusElement = document.getElementById('serverStatus');
         statusElement.className = 'badge bg-danger';
         statusElement.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Error';
+        
+        // Show error message to user
+        showResult('error', 'Tidak dapat memuat status server. Periksa koneksi Anda.');
     }
 }
 
@@ -220,6 +231,7 @@ async function showInfo() {
             <div class="text-center text-danger">
                 <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                 <p>Gagal memuat informasi</p>
+                <small class="text-muted">Error: ${error.message}</small>
             </div>
         `;
     }
@@ -254,6 +266,7 @@ function refreshStatus() {
             }
         } catch (error) {
             console.error('Refresh user error:', error);
+            showResult('error', 'Gagal memperbarui data user. Silakan refresh halaman.');
         }
     }, 1000);
 }
