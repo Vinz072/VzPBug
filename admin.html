@@ -11,9 +11,7 @@
 </head>
 <body>
     <div class="video-background">
-        <video autoplay muted loop>
-            <source src="assets/bgvid.mp4" type="video/mp4">
-        </video>
+        <div class="animated-background"></div>
     </div>
     
     <div class="overlay"></div>
@@ -22,7 +20,11 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="dashboard.html">
-                <img src="assets/logo.png" alt="Logo" width="40" height="40" class="me-2 rounded-circle">
+                <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" class="me-2">
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="#8b0000" stroke-width="3"/>
+                    <text x="40" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ff4444">VzP</text>
+                    <text x="40" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#ccc">BUG</text>
+                </svg>
                 VzPBug v1.0 - Admin
             </a>
             
